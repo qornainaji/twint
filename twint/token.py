@@ -60,10 +60,10 @@ class Token:
     def refresh(self):
         logme.debug('Retrieving guest token')
         res = self._request()
-        match = re.search(r'\("gt=(\d+);', res.text)
-        if match:
+        res_json = res.json()
+        if "guest_token" in res_json.keys():
             logme.debug('Found guest token in HTML')
-            self.config.Guest_token = str(match.group(1))
+            self.config.Guest_token = res_json["guest_token"]
         else:
             self.config.Guest_token = None
             raise RefreshTokenException('Could not find the Guest token in HTML')
