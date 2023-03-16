@@ -1,9 +1,8 @@
-import re
+mport re
 import time
 
 import requests
 import logging as logme
-
 
 class TokenExpiryException(Exception):
     def __init__(self, msg):
@@ -22,12 +21,13 @@ class Token:
         self.config = config
         self._retries = 5
         self._timeout = 10
-        self.url = 'https://twitter.com'
+        self._session.headers.update({'authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA'})
+        self.url = 'https://api.twitter.com/1.1/guest/activate.json'
 
     def _request(self):
         for attempt in range(self._retries + 1):
             # The request is newly prepared on each retry because of potential cookie updates.
-            req = self._session.prepare_request(requests.Request('GET', self.url))
+            req = self._session.prepare_request(requests.Request('POST', self.url))
             logme.debug(f'Retrieving {req.url}')
             try:
                 r = self._session.send(req, allow_redirects=True, timeout=self._timeout)
